@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Weather Undergrpond API</title>
+
+    <link href="fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+
+	<script src="js/jquery-2.2.3.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+    <script src="js/chart.js"></script>
+    <script src="js/forecast.js"></script>
+
+</head>
+<body>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		/* Settings */
+		var country = "Ukraine",
+			city = "Kiev",
+			lang = "RU";
+
+		/* Weather */
+		$.ajax({
+			url: "http://api.wunderground.com/api/ef5a156e62f050d2/conditions/lang:" + lang + "/q/" + country + "/" + city + ".json",
+			dataType: "json",
+			success: function(url) {
+				console.log(url);
+				var temp_c = url.current_observation.temp_c,
+					feelslike_c = url.current_observation.feelslike_c,
+					weather = url.current_observation.weather,
+					relative_humidity = url.current_observation.relative_humidity,
+					wind_kph = url.current_observation.wind_kph,
+					visibility_km = url.current_observation.visibility_km,
+					pressure_mb = url.current_observation.pressure_mb,
+					pressure_trend = url.current_observation.pressure_trend,
+                    icon = url.current_observation.icon;
+
+				$(".temperature").html(temp_c + "ºC");
+				$(".feelslike_c").html(feelslike_c + "ºC");
+				$(".weather").html(weather);
+				$(".relative_humidity").html(relative_humidity);
+				$(".wind_kph").html(wind_kph + "км/ч");
+				$(".visibility_km").html(visibility_km + "км");
+				$(".pressure_mb").html(pressure_mb + "гПа");
+				if (pressure_trend == "+") {
+					$(".pressure_trend").addClass("green").html(pressure_trend.replace("+","<i class=\"fa fa-caret-up\"></i>"));
+				} else if(pressure_trend == "0") {}
+				  else{
+					$(".pressure_trend").addClass("red").html(pressure_trend.replace("-","<i class=\"fa fa-caret-down\"></i>"));
+				}
+                $(".icon").html("<img src=\"img/forecast/" + icon + ".png\" alt=\"" + icon + "\">");
+			}
+		});
+
+		/* Astrology */
+		$.ajax({
+			url: "http://api.wunderground.com/api/72df18b7f213607b/astronomy/q/" + country + "/" + city + ".json",
+			dataType: "json",
+			success: function(parsed_json) {
+				var moon_phase = parsed_json['moon_phase'];
+				var moonData = {};
+				moonData['Луна'] = moon_phase['percentIlluminated'] + '%',
+						moonData['Новолуние'] = moon_phase['ageOfMoon'],
+						moonData['Время'] = moon_phase['current_time']['hour'] + ":" + moon_phase['current_time']['minute'],
+						moonData['Восход'] = moon_phase['sunrise']['hour'] + ":" + moon_phase['sunrise']['minute'],
+						moonData['Закат'] = moon_phase['sunset']['hour'] + ":" + moon_phase['sunset']['minute'];
+
+				for (index in moonData) {
+					if (moonData.hasOwnProperty(index)) {
+						var newHourlyString = index + ': ' + moonData[index];
+						var newHourlyParagraph = $('<p/>').text(newHourlyString);
+						$(".astro").append(newHourlyParagraph);
+					}
+				}
+			}
+		});
+	});
+
+</script>
+
+<h1>Киев</h1>
+<h1>Погода</h1>
+<div><span class="icon"></span></div>
+<div>Температура: <span class="temperature"></span></div>
+<div>Чувствуется как: <span class="feelslike_c"></span></div>
+<div><span class="weather"></span></div>
+<div>Влажность: <span class="relative_humidity"></span></div>
+<div>Ветер: <span class="wind_kph"></span></div>
+<div>Видимость: <span class="visibility_km"></span></div>
+<div>Давление: <span class="pressure_trend"></span> <span class="pressure_mb"></span></div>
+
+<h1>Астрология</h1>
+<div class="astro"></div>
+
+
+<div class="container">
+<div class="forecast-holder">
+
+    <div class="row w-current-days">
+        <div class="col-lg-4">
+            <div class="w-mark">Вчера</div>
+            <div class="w-hold">
+                <div class="float-part">
+                    <div class="w-day">Суббота,<div class="w-date">14 мая</div></div>
+                    <div class="w-img"><img src="img/forecast/partlycloudy.png"></div>
+                    <div class="w-gradus">+24°</div>
+                </div>
+                <div class="list-part">
+                    <div class="clearfix-hard"></div>
+                    <div class="w-text-1">Ясно. Чувствуется как +25°</div>
+                    <div class="w-text-2">Tемпература <span class="green">почти такая же</span> как вчера.</div>
+                    <div class="w-text-3">Осадки 0%</div>
+                    <div class="w-text-4">Влажность 54 %</div>
+                    <div class="w-text-5">Ветер 14,4 км/ч</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 w-today">
+            <div class="w-mark">Сегодня</div>
+            <div class="w-hold">
+                <div class="float-part">
+                    <div class="w-day">Воскресение,<div class="w-date">15 мая</div></div>
+                    <div class="w-img"><img src="img/forecast/sunny.png"></div>
+                    <div class="w-gradus">+28°</div>
+                </div>
+                <div class="list-part">
+                    <div class="clearfix-hard"></div>
+                    <div class="w-text-1">Ясно. Чувствуется как +25°</div>
+                    <div class="w-text-2">Tемпература <span class="green">почти такая же</span> как вчера.</div>
+                    <div class="w-text-3">Осадки 0%</div>
+                    <div class="w-text-4">Влажность 54 %</div>
+                    <div class="w-text-5">Ветер 14,4 км/ч</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="w-mark">Завтра</div>
+            <div class="w-hold">
+                <div class="float-part">
+                    <div class="w-day">Понедельник,<div class="w-date">16 мая</div></div>
+                    <div class="w-img"><img src="img/forecast/thunder-sun.png"></div>
+                    <div class="w-gradus">+26°</div>
+                </div>
+                <div class="list-part">
+                    <div class="clearfix-hard"></div>
+                    <div class="w-text-1">Ясно. Чувствуется как +25°</div>
+                    <div class="w-text-2">Tемпература <span class="green">почти такая же</span> как вчера.</div>
+                    <div class="w-text-3">Осадки 0%</div>
+                    <div class="w-text-4">Влажность 54 %</div>
+                    <div class="w-text-5">Ветер 14,4 км/ч</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation">
+            <a href="#tab1" role="tab" data-toggle="tab">
+                <div class="tab-header">
+                    <div>Среда</div>
+                    <div>27 апреля</div>
+                </div>
+                <div class="tab-body">
+                    <span class="pull-left max">+28°C</span>
+                    <span class="pull-right min">+12°C</span>
+                    <div class="clearfix"></div>
+                    <div class="tab-ico">
+                        <img src="img/weather/sun.png" alt="sun">
+                    </div>
+                    <div class="tab-text">Ясно</div>
+                </div>
+            </a>
+        </li>
+        <li role="presentation">
+            <a href="#tab2" data-toggle="tab">
+                <div class="tab-header">
+                    <div>Четверг</div>
+                    <div>28 апреля</div>
+                </div>
+                <div class="tab-body">
+                    <span class="pull-left max">+25°C</span>
+                    <span class="pull-right min">+9°C</span>
+                    <div class="clearfix"></div>
+                    <div class="tab-ico">
+                        <img src="img/weather/rain.png" alt="rain">
+                    </div>
+                    <div class="tab-text">Дождь</div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="#tab2" data-toggle="tab">
+                <div class="tab-header">
+                    <div>Пятница</div>
+                    <div>29 апреля</div>
+                </div>
+                <div class="tab-body">
+                    <span class="pull-left max">+19°C</span>
+                    <span class="pull-right min">+12°C</span>
+                    <div class="clearfix"></div>
+                    <div class="tab-ico">
+                        <img src="img/weather/sun.png" alt="rain">
+                    </div>
+                    <div class="tab-text">Ясно</div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="#tab2" data-toggle="tab">
+                <div class="tab-header">
+                    <div>Суббота</div>
+                    <div>30 апреля</div>
+                </div>
+                <div class="tab-body">
+                    <span class="pull-left max">+17°C</span>
+                    <span class="pull-right min">+8°C</span>
+                    <div class="clearfix"></div>
+                    <div class="tab-ico">
+                        <img src="img/weather/sun.png" alt="rain">
+                    </div>
+                    <div class="tab-text">Ясно</div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="#tab2" data-toggle="tab">
+                <div class="tab-header">
+                    <div>Воскресение</div>
+                    <div>1 мая</div>
+                </div>
+                <div class="tab-body">
+                    <span class="pull-left max">+28°C</span>
+                    <span class="pull-right min">+12°C</span>
+                    <div class="clearfix"></div>
+                    <div class="tab-ico">
+                        <img src="img/weather/sun.png" alt="rain">
+                    </div>
+                    <div class="tab-text">Ясно</div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="#tab2" data-toggle="tab">
+                <div class="tab-header">
+                    <div>Понедельник</div>
+                    <div>2 мая</div>
+                </div>
+                <div class="tab-body">
+                    <span class="pull-left max">+19°C</span>
+                    <span class="pull-right min">+12°C</span>
+                    <div class="clearfix"></div>
+                    <div class="tab-ico">
+                        <img src="img/weather/sun.png" alt="rain">
+                    </div>
+                    <div class="tab-text">Ясно</div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="#tab2" data-toggle="tab">
+                <div class="tab-header">
+                    <div>Вторник</div>
+                    <div>3 мая</div>
+                </div>
+                <div class="tab-body">
+                    <span class="pull-left max">+12°C</span>
+                    <span class="pull-right min">+7°C</span>
+                    <div class="clearfix"></div>
+                    <div class="tab-ico">
+                        <img src="img/weather/cloud.png" alt="rain">
+                    </div>
+                    <div class="tab-text">Хмарно</div>
+                </div>
+            </a>
+        </li>
+
+
+
+
+    </ul>
+    <div class="tab-content" id="tabs">
+        <div class="tab-pane" id="tab1">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="pull-left">Температура</div>
+                    <div class="pull-right">Давление</div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="tab-pane" id="tab2">
+            2
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-sm-12" style="width: 95%">
+        <canvas id="weatherGraph-2" style="width: 100%;height:100%;max-height: 100px"></canvas>
+    </div>
+</div>
+</div>
+
+</body>
+</html>

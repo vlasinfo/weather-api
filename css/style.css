@@ -1,0 +1,174 @@
+body {
+    font-family: Roboto;
+}
+span {
+    font-weight: bold;
+}
+
+.green {
+    color: #00a194;
+}
+
+.red {
+    color: #cd0c21;
+}
+
+.clearfix-hard {
+    clear: both;
+}
+
+/* Forecast */
+.forecast-holder {
+    color: #666666;
+    font-size: 12px;
+}
+
+.forecast-holder .w-img img {
+    width: 100%;
+    padding: 10px 0;
+}
+
+.forecast-holder .w-text-1 {
+    display: block;
+}
+
+.forecast-holder .w-current-days {
+    margin: 0 0 15px 0;
+}
+
+.forecast-holder .float-part {
+    position: relative;
+    right: -8px;
+}
+
+.forecast-holder .list-part {
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.forecast-holder .w-date {
+    display: block;
+}
+.forecast-holder .w-current-days {
+
+}
+.forecast-holder .w-today {
+    border: 1px solid #d8d8d8;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0;
+    font-size: 14px;
+}
+.forecast-holder .w-mark {
+    padding: 10px;
+}
+
+.forecast-holder .w-today .w-hold {
+    max-width: 300px;
+    margin: 0 auto;
+}
+.forecast-holder .w-hold .w-day,
+.forecast-holder .w-hold .w-img,
+.forecast-holder .w-hold .w-gradus {
+    float: left;
+    color: #06256c;
+}
+.forecast-holder .w-hold .w-day {
+    padding: 12px 0 0 0;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.forecast-holder .w-today .w-hold .w-gradus {
+    font-size: 32px;
+    padding: 7px 0 0 0;
+}
+.forecast-holder .w-hold .w-day,
+.forecast-holder .w-hold .w-img,
+.forecast-holder .w-hold .w-gradus {
+
+}
+
+.forecast-holder .w-mark {
+    text-align: center;
+    color: #999999;
+}
+.forecast-holder .w-img {
+    width: 40px;
+    margin: 0 10px;
+}
+
+.forecast-holder .nav-tabs:before,
+.forecast-holder .nav-tabs:after {
+    display: none;
+}
+
+.forecast-holder .nav-tabs {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-bottom: 0;
+    margin: 0 0 20px 0;
+}
+
+.forecast-holder .nav-tabs>li {
+    float: none;
+    display: table-cell;
+}
+
+.forecast-holder .nav-tabs>li>a:focus,
+.forecast-holder .nav-tabs>li>a {
+
+    margin-right: 0;
+    margin-left: 0;
+    border: 1px solid #d9d9d9;
+    border-left-width: 0;
+    border-radius: 2px;
+}
+.forecast-holder .nav-tabs>li>a:hover {
+
+}
+
+.forecast-holder .nav-tabs>li:first-child>a {
+    border-left-width: 1px;
+}
+.forecast-holder .nav>li>a {
+    padding: 0;
+}
+
+.forecast-holder .tab-header {
+    text-align: center;
+    border-bottom: 1px solid #d9d9d9;
+    padding: 5px;
+}
+
+.forecast-holder .tab-body {
+    padding: 5px;
+}
+
+.forecast-holder .tab-body .max {
+    color: #ed7e00;
+    margin-right: 1px;
+    font-size: 11px;
+}
+
+.forecast-holder .tab-body .min {
+    color: #5585d7;
+    margin-left: 1px;
+    font-size: 11px
+}
+
+.forecast-holder .tab-body .tab-ico {
+    width: 40px;
+    margin: 0 auto;
+    padding: 0;
+
+}
+
+.forecast-holder .tab-body .tab-ico img {
+}
+
+.forecast-holder .tab-body .tab-text {
+    text-align: center;
+}
