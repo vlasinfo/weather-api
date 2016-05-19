@@ -24,10 +24,17 @@
 
 		/* Weather */
 		$.ajax({
-			url: "http://api.wunderground.com/api/ef5a156e62f050d2/conditions/lang:" + lang + "/q/" + country + "/" + city + ".json",
+			url: "http://api.wunderground.com/api/fbea22eb7a688b0d/conditions/forecast/astronomy/yesterday/hourly/lang:" + lang + "/q/" + country + "/" + city + ".json",
 			dataType: "json",
 			success: function(url) {
 				console.log(url);
+                /* forecast yesterday */
+                var tempm = url['history']['dailysummary']['0']['maxdewptm'];
+                $(".tempm").html(tempm + "ºC");
+                //moonData['Луна'] = moon_phase['percentIlluminated'] + '%',
+
+
+                /* forecast today */
 				var temp_c = url.current_observation.temp_c,
 					feelslike_c = url.current_observation.feelslike_c,
 					weather = url.current_observation.weather,
@@ -37,7 +44,6 @@
 					pressure_mb = url.current_observation.pressure_mb,
 					pressure_trend = url.current_observation.pressure_trend,
                     icon = url.current_observation.icon;
-
 				$(".temperature").html(temp_c + "ºC");
 				$(".feelslike_c").html(feelslike_c + "ºC");
 				$(".weather").html(weather);
@@ -79,24 +85,56 @@
 		});
 	});
 
+    /* for a day */
+
+    $(document).ready(function($){
+        $.ajax({
+            url: "http://api.wunderground.com/api/72df18b7f213607b/forecast/q/CO/Alamosa.json",
+            dataType : "jsonp",
+            success : function(parsed_json) {
+                var forecast = parsed_json['forecast']['txt_forecast']['forecastday'];
+
+                for (index in forecast) {
+                    var newForecastString = 'Weather forecast for ' + forecast[index]['title'] + ' is ' + forecast[index]['fcttext_metric'];
+                    var newForecastParagraph = $('<p/>').text(newForecastString);
+                    $(".three").append(newForecastParagraph);
+                }
+            }
+        });
+    });
+
 </script>
 
-<h1>Киев</h1>
-<h1>Погода</h1>
-<div><span class="icon"></span></div>
-<div>Температура: <span class="temperature"></span></div>
-<div>Чувствуется как: <span class="feelslike_c"></span></div>
-<div><span class="weather"></span></div>
-<div>Влажность: <span class="relative_humidity"></span></div>
-<div>Ветер: <span class="wind_kph"></span></div>
-<div>Видимость: <span class="visibility_km"></span></div>
-<div>Давление: <span class="pressure_trend"></span> <span class="pressure_mb"></span></div>
-
-<h1>Астрология</h1>
-<div class="astro"></div>
-
-
 <div class="container">
+    <h1>Погода в Киеве</h1>
+<div class="row">
+    <div class="col-lg-4 text-center">
+        <div class="text-muted">Вчера</div>
+        <div><span class="icon"></span></div>
+        <div>Температура: <span class="tempm"></span></div>
+    </div>
+
+    <div class="col-lg-4 text-center">
+        <div class="text-muted">Сегодня</div>
+        <div><span class="icon"></span></div>
+        <div>Температура: <span class="temperature"></span></div>
+        <div>Чувствуется как: <span class="feelslike_c"></span></div>
+        <div><span class="weather"></span></div>
+        <div>Влажность: <span class="relative_humidity"></span></div>
+        <div>Ветер: <span class="wind_kph"></span></div>
+        <div>Видимость: <span class="visibility_km"></span></div>
+        <div>Давление: <span class="pressure_trend"></span> <span class="pressure_mb"></span></div>
+        <hr>
+        <div class="astro"></div>
+    </div>
+
+    <div class="col-lg-4 text-center">
+        <div class="text-muted">Завтра</div>
+        <div><span class="icon"></span></div>
+        <div>Температура: <span class="temperature"></span></div>
+    </div>
+</div>
+
 <div class="forecast-holder">
 
     <div class="row w-current-days">
