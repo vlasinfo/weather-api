@@ -16,6 +16,27 @@
 <body>
 
 <script type="text/javascript">
+    $(function() {
+    var days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота','Воскресение'],
+        month = ['Января','Февраля','Марта','Апреля','Мая','Июня', 'Июля','Августа','Сентября','Октября','Ноября','Декабря'];
+
+    var weekDays = new Date(),
+        monthDays = new Date();
+
+    var yesterdayForecast = weekDays.getDay()-2,
+        todayForecast = weekDays.getDay()-1,
+        tommorowForecast = weekDays.getDay();
+
+    var monthForecast = monthDays.getDay()-1;
+        alert(month[monthForecast]);
+
+    $(".yesterdayForecast").html(days[yesterdayForecast]);
+    $(".todayForecast").html(days[todayForecast]);
+    $(".tommorowForecast").html(days[tommorowForecast]);
+
+
+    });
+
 	$(document).ready(function() {
 		/* Settings */
 		var country = "Ukraine",
@@ -29,8 +50,17 @@
 			success: function(url) {
 				console.log(url);
                 /* forecast yesterday */
-                var tempm = url['history']['dailysummary']['0']['maxdewptm'];
-                $(".tempm").html(tempm + "ºC");
+                var iconyesterday = url['history']['dailysummary']['0']['icon'],
+                        meantempm = url['history']['dailysummary']['0']['meantempm'],
+                        meanpressurem = url['history']['dailysummary']['0']['meanpressurem'],
+                        meanwindspdm = url['history']['dailysummary']['0']['meanwindspdm'],
+                        humidity = url['history']['dailysummary']['0']['humidity'];
+
+                $(".iconyesterday").html("<img src=\"img/forecast/" + iconyesterday + ".png\" alt=\"" + iconyesterday + "\">");
+                $(".meantempm").html(meantempm + "ºC");
+                $(".meanpressurem").html(meanpressurem + "гПа");
+                $(".meanwindspdm").html(meanwindspdm + "км/ч");
+                $(".humidity").html(humidity + "%");
                 //moonData['Луна'] = moon_phase['percentIlluminated'] + '%',
 
 
@@ -110,12 +140,18 @@
 <div class="row">
     <div class="col-lg-4 text-center">
         <div class="text-muted">Вчера</div>
-        <div><span class="icon"></span></div>
-        <div>Температура: <span class="tempm"></span></div>
+        <div><span class="yesterdayForecast"></span></div>
+        <div><span class="iconyesterday"></span></div>
+        <div>Температура: <span class="meantempm"></span></div>
+        <div><span class="weather"></span></div>
+        <div>Влажность: <span class="humidity"></span></div>
+        <div>Ветер: <span class="meanwindspdm"></span></div>
+        <div>Давление: <span class="meanpressurem"></span></div>
     </div>
 
     <div class="col-lg-4 text-center">
         <div class="text-muted">Сегодня</div>
+        <div><span class="todayForecast"></span></div>
         <div><span class="icon"></span></div>
         <div>Температура: <span class="temperature"></span></div>
         <div>Чувствуется как: <span class="feelslike_c"></span></div>
@@ -130,6 +166,7 @@
 
     <div class="col-lg-4 text-center">
         <div class="text-muted">Завтра</div>
+        <div><span class="tommorowForecast"></span></div>
         <div><span class="icon"></span></div>
         <div>Температура: <span class="temperature"></span></div>
     </div>
