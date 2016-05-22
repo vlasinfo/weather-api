@@ -10,6 +10,7 @@
 	<script src="js/jquery-2.2.3.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
     <script src="js/chart.js"></script>
+    <script src="js/moment.js"></script>
     <script src="js/forecast.js"></script>
 
 </head>
@@ -17,23 +18,11 @@
 
 <script type="text/javascript">
     $(function() {
-    var days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота','Воскресение'],
-        month = ['Января','Февраля','Марта','Апреля','Мая','Июня', 'Июля','Августа','Сентября','Октября','Ноября','Декабря'];
 
-    var weekDays = new Date(),
-        monthDays = new Date();
-
-    var yesterdayForecast = weekDays.getDay()-2,
-        todayForecast = weekDays.getDay()-1,
-        tommorowForecast = weekDays.getDay();
-
-    var monthForecast = monthDays.getDay()-1;
-        alert(month[monthForecast]);
-
-    $(".yesterdayForecast").html(days[yesterdayForecast]);
-    $(".todayForecast").html(days[todayForecast]);
-    $(".tommorowForecast").html(days[tommorowForecast]);
-
+    moment.locale('ru')
+    $(".yesterdayWeekDay").html(moment().subtract(1, 'days').format('dddd'));
+    $(".yesterdayMonthDay").html(moment().subtract(1, 'days').format('DD MMMM'));
+    $(".todayForecast").html(moment().format('dddd'));
 
     });
 
@@ -50,13 +39,11 @@
 			success: function(url) {
 				console.log(url);
                 /* forecast yesterday */
-                var iconyesterday = url['history']['dailysummary']['0']['icon'],
-                        meantempm = url['history']['dailysummary']['0']['meantempm'],
-                        meanpressurem = url['history']['dailysummary']['0']['meanpressurem'],
-                        meanwindspdm = url['history']['dailysummary']['0']['meanwindspdm'],
-                        humidity = url['history']['dailysummary']['0']['humidity'];
+                var meantempm = url['history']['dailysummary']['0']['meantempm'],
+                    meanpressurem = url['history']['dailysummary']['0']['meanpressurem'],
+                    meanwindspdm = url['history']['dailysummary']['0']['meanwindspdm'],
+                    humidity = url['history']['dailysummary']['0']['humidity'];
 
-                $(".iconyesterday").html("<img src=\"img/forecast/" + iconyesterday + ".png\" alt=\"" + iconyesterday + "\">");
                 $(".meantempm").html(meantempm + "ºC");
                 $(".meanpressurem").html(meanpressurem + "гПа");
                 $(".meanwindspdm").html(meanwindspdm + "км/ч");
@@ -80,6 +67,9 @@
 				$(".relative_humidity").html(relative_humidity);
 				$(".wind_kph").html(wind_kph + "км/ч");
 				$(".visibility_km").html(visibility_km + "км");
+                if (visibility_km == "N/A") {
+                    $(".visibility_km").html("Нет данных");
+                }
 				$(".pressure_mb").html(pressure_mb + "гПа");
 				if (pressure_trend == "+") {
 					$(".pressure_trend").addClass("green").html(pressure_trend.replace("+","<i class=\"fa fa-caret-up\"></i>"));
@@ -140,8 +130,8 @@
 <div class="row">
     <div class="col-lg-4 text-center">
         <div class="text-muted">Вчера</div>
-        <div><span class="yesterdayForecast"></span></div>
-        <div><span class="iconyesterday"></span></div>
+        <div><span class="yesterdayWeekDay"></span></div>
+        <div><span class="yesterdayMonthDay"></span></div>
         <div>Температура: <span class="meantempm"></span></div>
         <div><span class="weather"></span></div>
         <div>Влажность: <span class="humidity"></span></div>
