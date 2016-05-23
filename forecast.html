@@ -34,25 +34,23 @@
 
 		/* Weather */
 		$.ajax({
-			url: "http://api.wunderground.com/api/fbea22eb7a688b0d/conditions/forecast/astronomy/yesterday/hourly/lang:" + lang + "/q/" + country + "/" + city + ".json",
+			url: "http://api.wunderground.com/api/fbea22eb7a688b0d/conditions/forecast/astronomy/yesterday/hourly/hourly10day/lang:" + lang + "/q/" + country + "/" + city + ".json",
 			dataType: "json",
 			success: function(url) {
 				console.log(url);
+
+                var observation_time_rfc822 = url.current_observation.observation_time_rfc822,
+                observation_time_slice = observation_time_rfc822.split(' ').slice(4, -1).join(' '),
+                observation_time_rfc822_s = observation_time_slice .slice(0, -3);
                 /* forecast yesterday */
                 var meantempm = url['history']['dailysummary']['0']['meantempm'],
                     meanpressurem = url['history']['dailysummary']['0']['meanpressurem'],
                     meanwindspdm = url['history']['dailysummary']['0']['meanwindspdm'],
                     humidity = url['history']['dailysummary']['0']['humidity'];
 
-                $(".meantempm").html(meantempm + "ºC");
-                $(".meanpressurem").html(meanpressurem + "гПа");
-                $(".meanwindspdm").html(meanwindspdm + "км/ч");
-                $(".humidity").html(humidity + "%");
-                //moonData['Луна'] = moon_phase['percentIlluminated'] + '%',
-
-
                 /* forecast today */
-				var temp_c = url.current_observation.temp_c,
+				var weekdayt = url['forecast']['simpleforecast']['forecastday']['0']['date']['weekday']
+                    temp_c = url.current_observation.temp_c,
 					feelslike_c = url.current_observation.feelslike_c,
 					weather = url.current_observation.weather,
 					relative_humidity = url.current_observation.relative_humidity,
@@ -61,24 +59,63 @@
 					pressure_mb = url.current_observation.pressure_mb,
 					pressure_trend = url.current_observation.pressure_trend,
                     icon = url.current_observation.icon;
-				$(".temperature").html(temp_c + "ºC");
-				$(".feelslike_c").html(feelslike_c + "ºC");
-				$(".weather").html(weather);
-				$(".relative_humidity").html(relative_humidity);
-				$(".wind_kph").html(wind_kph + "км/ч");
-				$(".visibility_km").html(visibility_km + "км");
+
+                /* forecast tommorow */
+                var meantempmt = url['hourly_forecast']['1']['temp']['metric'],
+                    icont = url['hourly_forecast']['11']['icon'],
+                    weekday_namet = url['hourly_forecast']['11']['FCTTIME']['weekday_name'],
+                    mdayt = url['hourly_forecast']['11']['FCTTIME']['mday'];
+                    month_name = url['hourly_forecast']['11']['FCTTIME']['month_name'];
+
+                $(".observation_time_rfc822").html(observation_time_rfc822_s);
+                $(".observation_time_rfc822").html(observation_time_rfc822_s);
+                /* forecast yesterday */
+                $(".meantempm").html(meantempm + "ºC");
+                $(".meanpressurem").html(meanpressurem + "гПа");
+                $(".meanwindspdm").html(meanwindspdm + "км/ч");
+                $(".humidity").html(humidity + "%");
+                //moonData['Луна'] = moon_phase['percentIlluminated'] + '%',
+
+                /* forecast today */
+                $(".temperature").html(temp_c + "ºC");
+                $(".feelslike_c").html(feelslike_c + "ºC");
+                $(".weather").html(weather);
+                $(".relative_humidity").html(relative_humidity);
+                $(".wind_kph").html(wind_kph + "км/ч");
+                $(".visibility_km").html(visibility_km + "км");
                 if (visibility_km == "N/A") {
                     $(".visibility_km").html("Нет данных");
                 }
-				$(".pressure_mb").html(pressure_mb + "гПа");
-				if (pressure_trend == "+") {
-					$(".pressure_trend").addClass("green").html(pressure_trend.replace("+","<i class=\"fa fa-caret-up\"></i>"));
-				} else if(pressure_trend == "0") {}
-				  else{
-					$(".pressure_trend").addClass("red").html(pressure_trend.replace("-","<i class=\"fa fa-caret-down\"></i>"));
-				}
+                $(".pressure_mb").html(pressure_mb + "гПа");
+                if (pressure_trend == "+") {
+                    $(".pressure_trend").addClass("green").html(pressure_trend.replace("+","<i class=\"fa fa-caret-up\"></i>"));
+                } else if(pressure_trend == "0") {}
+                else{
+                    $(".pressure_trend").addClass("red").html(pressure_trend.replace("-","<i class=\"fa fa-caret-down\"></i>"));
+                }
                 $(".icon").html("<img src=\"img/forecast/" + icon + ".png\" alt=\"" + icon + "\">");
+
+                var month_namet = month_name.replace("Январь", "января")
+                                            .replace("Февраль", "февраля")
+                                            .replace("Март", "марта")
+                                            .replace("Апрель", "апреля")
+                                            .replace("Май", "мая")
+                                            .replace("Июнь", "июня")
+                                            .replace("Июль", "июля")
+                                            .replace("Август", "августа")
+                                            .replace("Сентябрь", "сентября")
+                                            .replace("Октябрь", "октября")
+                                            .replace("Ноябрь", "ноября")
+                                            .replace("Декабрь", "декабря");
+
+                $(".meantempmt").html(meantempmt + "ºC");
+                $(".weekday_namet").html(weekday_namet);
+                $(".mdayt").html(mdayt);
+                $(".month_namet").html(month_namet);
+                $(".icont").html("<img src=\"img/forecast/" + icont + ".png\" alt=\"" + icont + "\">");
+
 			}
+
 		});
 
 		/* Astrology */
@@ -105,28 +142,11 @@
 		});
 	});
 
-    /* for a day */
-
-    $(document).ready(function($){
-        $.ajax({
-            url: "http://api.wunderground.com/api/72df18b7f213607b/forecast/q/CO/Alamosa.json",
-            dataType : "jsonp",
-            success : function(parsed_json) {
-                var forecast = parsed_json['forecast']['txt_forecast']['forecastday'];
-
-                for (index in forecast) {
-                    var newForecastString = 'Weather forecast for ' + forecast[index]['title'] + ' is ' + forecast[index]['fcttext_metric'];
-                    var newForecastParagraph = $('<p/>').text(newForecastString);
-                    $(".three").append(newForecastParagraph);
-                }
-            }
-        });
-    });
-
 </script>
 
 <div class="container">
     <h1>Погода в Киеве</h1>
+    <div class="subheader">Обновлено в <span class="observation_time_rfc822"></span></div>
 <div class="row">
     <div class="col-lg-4 text-center">
         <div class="text-muted">Вчера</div>
@@ -156,9 +176,11 @@
 
     <div class="col-lg-4 text-center">
         <div class="text-muted">Завтра</div>
+        <div><span class="weekday_namet"></span></div>
+        <div><span class="mdayt"></span> <span class="month_namet"></span></div>
         <div><span class="tommorowForecast"></span></div>
-        <div><span class="icon"></span></div>
-        <div>Температура: <span class="temperature"></span></div>
+        <div><span class="icont"></span></div>
+        <div>Температура: <span class="meantempmt"></span></div>
     </div>
 </div>
 
@@ -234,7 +256,7 @@
                     <span class="pull-right min">+12°C</span>
                     <div class="clearfix"></div>
                     <div class="tab-ico">
-                        <img src="img/weather/sun.png" alt="sun">
+                        <img src="img/forecast/sunny.png" alt="sun">
                     </div>
                     <div class="tab-text">Ясно</div>
                 </div>
@@ -251,7 +273,7 @@
                     <span class="pull-right min">+9°C</span>
                     <div class="clearfix"></div>
                     <div class="tab-ico">
-                        <img src="img/weather/rain.png" alt="rain">
+                        <img src="img/forecast/rain.png" alt="rain">
                     </div>
                     <div class="tab-text">Дождь</div>
                 </div>
@@ -268,7 +290,7 @@
                     <span class="pull-right min">+12°C</span>
                     <div class="clearfix"></div>
                     <div class="tab-ico">
-                        <img src="img/weather/sun.png" alt="rain">
+                        <img src="img/forecast/sunny.png" alt="rain">
                     </div>
                     <div class="tab-text">Ясно</div>
                 </div>
@@ -285,7 +307,7 @@
                     <span class="pull-right min">+8°C</span>
                     <div class="clearfix"></div>
                     <div class="tab-ico">
-                        <img src="img/weather/sun.png" alt="rain">
+                        <img src="img/forecast/sunny.png" alt="rain">
                     </div>
                     <div class="tab-text">Ясно</div>
                 </div>
@@ -302,7 +324,7 @@
                     <span class="pull-right min">+12°C</span>
                     <div class="clearfix"></div>
                     <div class="tab-ico">
-                        <img src="img/weather/sun.png" alt="rain">
+                        <img src="img/forecast/sunny.png" alt="rain">
                     </div>
                     <div class="tab-text">Ясно</div>
                 </div>
@@ -319,7 +341,7 @@
                     <span class="pull-right min">+12°C</span>
                     <div class="clearfix"></div>
                     <div class="tab-ico">
-                        <img src="img/weather/sun.png" alt="rain">
+                        <img src="img/forecast/sunny.png" alt="rain">
                     </div>
                     <div class="tab-text">Ясно</div>
                 </div>
@@ -336,7 +358,7 @@
                     <span class="pull-right min">+7°C</span>
                     <div class="clearfix"></div>
                     <div class="tab-ico">
-                        <img src="img/weather/cloud.png" alt="rain">
+                        <img src="img/forecast/cloudy.png" alt="rain">
                     </div>
                     <div class="tab-text">Хмарно</div>
                 </div>

@@ -42,15 +42,6 @@ $(function () {
             }]
         };
         Chart.defaults.global.responsive = true;
-        window.onload = function () {
-            window.myOverlayChart = new Chart(document.getElementById("weatherGraph").getContext("2d")).Overlay(overlayData, {
-                populateSparseData: true,
-                overlayBars: false,
-                pointDotRadius: 10,
-                bezierCurve: false,
-                scaleShowVerticalLines: false
-            });
-        }
 
 
 

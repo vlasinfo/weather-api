@@ -167,6 +167,7 @@ span {
 }
 
 .forecast-holder .tab-body .tab-ico img {
+    width: 40px;
 }
 
 .forecast-holder .tab-body .tab-text {

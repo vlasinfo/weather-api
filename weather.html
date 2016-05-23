@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Weather Undergrpond API</title>
+
+	<link href="css/style.css" rel="stylesheet">
+	<script src="js/jquery-2.2.3.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		var country = "Ukraine",
+			city = "Kiev",
+			lang = "RU";
+
+		/* weather */
+		$.ajax({
+			url: "http://api.wunderground.com/api/ef5a156e62f050d2/conditions/lang:" + lang + "/q/" + country + "/" + city + ".json",
+			dataType: "json",
+			success: function(url) {
+				console.log(url);
+					temp_c = url.current_observation.temp_c,
+					weather = url.current_observation.weather,
+					relative_humidity = url.current_observation.relative_humidity;
+				$(".temperature").html(temp_c);
+				$(".weather").html(weather);
+				$(".relative_humidity").html(relative_humidity);
+			}
+		});
+
+		/* astrology */
+		$.ajax({
+			url: "http://api.wunderground.com/api/72df18b7f213607b/astronomy/q/" + country + "/" + city + ".json",
+			dataType: "json",
+			success: function(parsed_json) {
+				var moon_phase = parsed_json['moon_phase'];
+				var moonData = {};
+				moonData['Луна'] = moon_phase['percentIlluminated'] + '%',
+						moonData['Новолуние'] = moon_phase['ageOfMoon'],
+						moonData['Время'] = moon_phase['current_time']['hour'] + ":" + moon_phase['current_time']['minute'],
+						moonData['Восход'] = moon_phase['sunrise']['hour'] + ":" + moon_phase['sunrise']['minute'],
+						moonData['Закат'] = moon_phase['sunset']['hour'] + ":" + moon_phase['sunset']['minute'];
+
+				for (index in moonData) {
+					if (moonData.hasOwnProperty(index)) {
+						var newHourlyString = index + ': ' + moonData[index];
+						var newHourlyParagraph = $('<p/>').text(newHourlyString);
+						$(".astro").append(newHourlyParagraph);
+					}
+				}
+			}
+		});
+	});
+
+</script>
+
+<h1>Киев</h1>
+<h1>Погода</h1>
+<span class="temperature"></span><span>ºC</span>
+<span class="weather"></span>
+<span class="weather"></span>
+
+<h1>Астрология</h1>
+<div class="astro"></div>
+
+</body>
+</html>
